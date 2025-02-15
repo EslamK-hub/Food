@@ -1,6 +1,5 @@
 import MainHeading from "@/components/main-heading";
-import { formatCurrency } from "@/lib/formatters";
-import Image from "next/image";
+import Menu from "@/components/menu";
 
 export default function BestSellers() {
     const bestSellers = [
@@ -35,30 +34,7 @@ export default function BestSellers() {
                         subTitle={`Checkout`}
                     ></MainHeading>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    {bestSellers.map((pizza) => (
-                        <div key={pizza.id}>
-                            <div className="relative w-48 h-48 mx-auto">
-                                <Image
-                                    src={pizza.image}
-                                    alt={pizza.name}
-                                    className="object-cover"
-                                    fill
-                                />
-                            </div>
-                            <div className="flex justify-between items-center mb-4">
-                                <h5 className="font-semibold text-xl my-3">{pizza.name}</h5>
-                                <strong className="text-accent">
-                                    {formatCurrency(pizza.price)}
-                                </strong>
-                            </div>
-                                <p className="text-gray-500 text-sm line-clamp-3">{pizza.description}</p>
-                                <a href="#" className="btn btn-primary">
-                                    Order Now
-                                </a>
-                        </div>
-                    ))}
-                </div>
+                <Menu items={bestSellers}></Menu>
             </div>
         </section>
     );
