@@ -2,7 +2,6 @@
 import { formatCurrency } from "@/lib/formatters";
 import Image from "next/image";
 import AddToCartButton from "./AddToCartButton";
-import { Product } from "@prisma/client";
 import { ProductWithRelations } from "@/types/product";
 
 export default function MenuItem({ item }: { item: ProductWithRelations }) {

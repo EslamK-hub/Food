@@ -26,9 +26,6 @@ export default function AddToCartButton({ item }: { item: ProductWithRelations }
                     type="button"
                     size="lg"
                     className="mt-4 text-white px-8 rounded-full"
-                    onClick={() => {
-                        console.log("Add to cart clicked");
-                    }}
                 >
                     <span>Add To Cart</span>
                 </Button>
@@ -66,6 +63,7 @@ export default function AddToCartButton({ item }: { item: ProductWithRelations }
 }
 
 function PickSize({ sizes, item }: { sizes: Size[], item: ProductWithRelations }) {
+
     return (
         <RadioGroup defaultValue="comfortable">
             {sizes.map((size) => (

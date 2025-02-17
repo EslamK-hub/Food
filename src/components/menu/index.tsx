@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Product } from "@prisma/client";
 import MenuItem from "./MenuItem";
 import { ProductWithRelations } from "@/types/product";
