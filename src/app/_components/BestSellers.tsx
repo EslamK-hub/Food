@@ -3,7 +3,7 @@ import Menu from "@/components/menu";
 import { getBestSellingProducts } from "@/server/db/products";
 
 export default async function BestSellers() {
-    const bestSellers = await getBestSellingProducts();
+    const bestSellers = await getBestSellingProducts(3);
         
     //     [
     //     {
