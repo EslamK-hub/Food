@@ -6,8 +6,8 @@ export const getBestSellingProducts = cache(
         const bestSellers = db.product.findMany({
             where: {
                 orders: {
-                    some:{}
-                }
+                    some: {},
+                },
             },
             orderBy: {
                 orders: {
