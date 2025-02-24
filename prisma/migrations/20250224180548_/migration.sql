@@ -1,11 +1,8 @@
-/*
-  Warnings:
+-- CreateEnum
+CREATE TYPE "ProductSizes" AS ENUM ('SMALL', 'MEDIUM', 'LARGE');
 
-  - Added the required column `categoryId` to the `Product` table without a default value. This is not possible if the table is not empty.
-
-*/
--- AlterTable
-ALTER TABLE "Product" ADD COLUMN     "categoryId" TEXT NOT NULL;
+-- CreateEnum
+CREATE TYPE "ExtraIngredients" AS ENUM ('CHEESE', 'BACON', 'TOMATO', 'ONION', 'PEPPER');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -23,6 +20,41 @@ CREATE TABLE "User" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Product" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "image" TEXT NOT NULL,
+    "order" INTEGER NOT NULL,
+    "basePrice" DOUBLE PRECISION NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "categoryId" TEXT NOT NULL,
+
+    CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Size" (
+    "id" TEXT NOT NULL,
+    "name" "ProductSizes" NOT NULL,
+    "price" DOUBLE PRECISION NOT NULL,
+    "productId" TEXT NOT NULL,
+
+    CONSTRAINT "Size_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Extra" (
+    "id" TEXT NOT NULL,
+    "name" "ExtraIngredients" NOT NULL,
+    "price" DOUBLE PRECISION NOT NULL,
+    "productId" TEXT NOT NULL,
+
+    CONSTRAINT "Extra_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -69,6 +101,12 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- AddForeignKey
 ALTER TABLE "Product" ADD CONSTRAINT "Product_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Size" ADD CONSTRAINT "Size_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Extra" ADD CONSTRAINT "Extra_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "OrderProduct" ADD CONSTRAINT "OrderProduct_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
