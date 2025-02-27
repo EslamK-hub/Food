@@ -1,7 +1,22 @@
 import { RootState } from "@/redux/store";
+import { Extra, Size } from "@prisma/client";
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+export type CartItem = {
+    id: string,
+    name: string,
+    basePrice: number,
+    quantity?: number,
+    image: string,
+    size?: Size,
+    extras: Extra[],
+}
+
+type CartState = {
+    items: CartItem[],
+}
+
+const initialState: CartState = {
     items: [],
 };
 

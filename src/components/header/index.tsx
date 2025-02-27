@@ -1,6 +1,7 @@
 import { Routes } from "@/constants/enums";
 import Link from "../link";
 import Navbar from "./Navbar";
+import CartButton from "./CartButton";
 
 export default function Header() {
     return (
@@ -8,6 +9,7 @@ export default function Header() {
             <div className="container flex justify-between items-center">
                 <Link href={Routes.ROOT} className="text-primary font-semibold text-2xl">🍕 Pizza</Link>
                 <Navbar></Navbar>
+                <CartButton></CartButton>
             </div>
         </header>
     );
