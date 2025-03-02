@@ -15,10 +15,22 @@ import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { formatCurrency } from "@/lib/formatters";
 import { Checkbox } from "../ui/checkbox";
-import { Extra, Size } from "@prisma/client";
+import { Extra, ProductSizes, Size } from "@prisma/client";
 import { ProductWithRelations } from "@/types/product";
+import { useState } from "react";
+import { useAppSelector } from "@/redux/hooks";
+import { selectCartItems } from "@/redux/features/cart/cartSlice";
 
-export default function AddToCartButton({ item }: { item: ProductWithRelations }) {
+export default function AddToCartButton({
+    item,
+}: {
+    item: ProductWithRelations;
+}) {
+    const cart = useAppSelector(selectCartItems);
+    const defaultSize =
+        cart.find((element) => element.id === item.id)?.size ||
+        item.sizes.find((size) => size.name === ProductSizes.SMALL);
+    const [selectedSize, setSelectedSize] = useState<Size>(defaultSize!);
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -46,7 +58,12 @@ export default function AddToCartButton({ item }: { item: ProductWithRelations }
                 <div className="space-y-10">
                     <div className="space-y-4 text-center">
                         <Label htmlFor="pick-size">Pick your size</Label>
-                        <PickSize sizes={item.sizes} item={item}></PickSize>
+                        <PickSize
+                            sizes={item.sizes}
+                            item={item}
+                            selectedSize={selectedSize}
+                            setSelectedSize={setSelectedSize}
+                        ></PickSize>
                     </div>
                     <div className="space-y-4 text-center">
                         <Label htmlFor="add-extras">Any extras?</Label>
@@ -54,7 +71,9 @@ export default function AddToCartButton({ item }: { item: ProductWithRelations }
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button type="submit" className="w-full h-10">Add To Cart</Button>
+                    <Button type="submit" className="w-full h-10">
+                        Add To Cart
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -62,8 +81,17 @@ export default function AddToCartButton({ item }: { item: ProductWithRelations }
     );
 }
 
-function PickSize({ sizes, item }: { sizes: Size[], item: ProductWithRelations }) {
-
+function PickSize({
+    sizes,
+    item,
+    selectedSize,
+    setSelectedSize,
+}: {
+    sizes: Size[];
+    item: ProductWithRelations;
+    selectedSize: Size;
+    setSelectedSize: React.Dispatch<React.SetStateAction<Size>>;
+}) {
     return (
         <RadioGroup defaultValue="comfortable">
             {sizes.map((size) => (
@@ -71,9 +99,10 @@ function PickSize({ sizes, item }: { sizes: Size[], item: ProductWithRelations }
                     key={size.id}
                     className="flex items-center space-x-2 border border-gray-100 p-4 rounded-md"
                 >
-                    <RadioGroupItem value="default" id={size.id} />
+                    <RadioGroupItem value={selectedSize.name} checked={selectedSize.id === size.id} onClick={() => setSelectedSize(size)} id={size.id} />
                     <Label htmlFor={size.id}>
-                        {size.name} {formatCurrency(size.price + item.basePrice)}
+                        {size.name}{" "}
+                        {formatCurrency(size.price + item.basePrice)}
                     </Label>
                 </div>
             ))}
