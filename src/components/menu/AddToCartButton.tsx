@@ -31,6 +31,22 @@ export default function AddToCartButton({
         cart.find((element) => element.id === item.id)?.size ||
         item.sizes.find((size) => size.name === ProductSizes.SMALL);
     const [selectedSize, setSelectedSize] = useState<Size>(defaultSize!);
+
+    const defaultExtras =
+        cart.find((element) => element.id === item.id)?.extras || [];
+    const [selectedExtras, setSelectedExtras] = useState<Extra[]>(
+        defaultExtras!
+    );
+
+    let totalPrice = item.basePrice;
+    if (selectedSize) {
+        totalPrice += selectedSize.price;
+    }
+    if (selectedExtras.length > 0) {
+        for (const extra of selectedExtras) {
+            totalPrice += extra.price
+        }
+    }
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -67,12 +83,16 @@ export default function AddToCartButton({
                     </div>
                     <div className="space-y-4 text-center">
                         <Label htmlFor="add-extras">Any extras?</Label>
-                        <Extras extras={item.extras}></Extras>
+                        <Extras
+                            extras={item.extras}
+                            selectedExtras={selectedExtras}
+                            setSelectedExtras={setSelectedExtras}
+                        ></Extras>
                     </div>
                 </div>
                 <DialogFooter>
                     <Button type="submit" className="w-full h-10">
-                        Add To Cart
+                        Add To Cart {formatCurrency(totalPrice)}
                     </Button>
                 </DialogFooter>
             </DialogContent>
@@ -99,7 +119,12 @@ function PickSize({
                     key={size.id}
                     className="flex items-center space-x-2 border border-gray-100 p-4 rounded-md"
                 >
-                    <RadioGroupItem value={selectedSize.name} checked={selectedSize.id === size.id} onClick={() => setSelectedSize(size)} id={size.id} />
+                    <RadioGroupItem
+                        value={selectedSize.name}
+                        checked={selectedSize.id === size.id}
+                        onClick={() => setSelectedSize(size)}
+                        id={size.id}
+                    />
                     <Label htmlFor={size.id}>
                         {size.name}{" "}
                         {formatCurrency(size.price + item.basePrice)}
@@ -110,13 +135,35 @@ function PickSize({
     );
 }
 
-function Extras({ extras }: { extras: Extra[] }) {
+function Extras({
+    extras,
+    selectedExtras,
+    setSelectedExtras,
+}: {
+    extras: Extra[];
+    selectedExtras: Extra[];
+    setSelectedExtras: React.Dispatch<React.SetStateAction<Extra[]>>;
+}) {
+    const handleExtra = (extra: Extra) => {
+        if (selectedExtras.find((e) => e.id === extra.id)) {
+            const filteredSelectedExtras = selectedExtras.filter(
+                (item) => item.id !== extra.id
+            );
+            setSelectedExtras(filteredSelectedExtras);
+        } else {
+            setSelectedExtras((prev) => [...prev, extra]);
+        }
+    };
     return extras.map((extra) => (
         <div
             key={extra.id}
             className="flex items-center space-x-2 border border-gray-100 p-4 rounded-md"
         >
-            <Checkbox id={extra.id} />
+            <Checkbox
+                id={extra.id}
+                onClick={() => handleExtra(extra)}
+                checked={Boolean(selectedExtras.find((e) => e.id === extra.id))}
+            />
             <label
                 htmlFor={extra.id}
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
