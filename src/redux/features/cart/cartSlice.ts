@@ -16,8 +16,10 @@ type CartState = {
     items: CartItem[];
 };
 
+const initialCartItems = localStorage.getItem("cartItems");
+
 const initialState: CartState = {
-    items: [],
+    items: initialCartItems ? JSON.parse(initialCartItems) : [],
 };
 
 export const cartSlice = createSlice({
@@ -61,7 +63,8 @@ export const cartSlice = createSlice({
     },
 });
 
-export const { addCartItem, removeCartItem, removeItemFromCart, clearCart } = cartSlice.actions;
+export const { addCartItem, removeCartItem, removeItemFromCart, clearCart } =
+    cartSlice.actions;
 export default cartSlice.reducer;
 
 export const selectCartItems = (state: RootState) => state.cart.items;
