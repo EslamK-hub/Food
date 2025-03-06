@@ -1,20 +1,35 @@
 "use client";
 
-import { FC, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { Pages, Routes } from "@/constants/enums";
 import { Button, buttonVariants } from "../ui/button";
 import { Menu, XIcon } from "lucide-react";
+import { useParams, usePathname } from "next/navigation";
 
-const Navbar: FC = () => {
+function Navbar({ translations }: { translations: { [key: string]: string } }) {
     const [openMenu, setOpenMenu] = useState(false);
+    const {locale} = useParams();
+    const pathname = usePathname();
     const links = [
-        { id: crypto.randomUUID(), title: "Menu", href: Routes.MENU },
-        { id: crypto.randomUUID(), title: "About", href: Routes.ABOUT },
-        { id: crypto.randomUUID(), title: "Contact", href: Routes.CONTACT },
         {
             id: crypto.randomUUID(),
-            title: "Login",
+            title: translations.menu,
+            href: Routes.MENU,
+        },
+        {
+            id: crypto.randomUUID(),
+            title: translations.about,
+            href: Routes.ABOUT,
+        },
+        {
+            id: crypto.randomUUID(),
+            title: translations.contact,
+            href: Routes.CONTACT,
+        },
+        {
+            id: crypto.randomUUID(),
+            title: translations.login,
             href: `${Routes.AUTH}/${Pages.LOGIN}`,
         },
     ];
@@ -44,14 +59,18 @@ const Navbar: FC = () => {
                 {links.map((link) => (
                     <li key={link.id}>
                         <Link
-                            href={`/${link.href}`}
+                            href={`/${locale}/${link.href}`}
                             className={`${
                                 link.href === `${Routes.AUTH}/${Pages.LOGIN}`
                                     ? `${buttonVariants({
                                           size: "lg",
                                       })} !px-8 !rounded-full`
                                     : "hover:text-primary duration-200 transition-colors"
-                            } font-semibold`}
+                            } font-semibold ${
+                                pathname.startsWith(`/${locale}/${link.href}`)
+                                    ? "text-primary"
+                                    : "text-accent"
+                            }`}
                         >
                             {link.title}
                         </Link>
@@ -60,6 +79,6 @@ const Navbar: FC = () => {
             </ul>
         </nav>
     );
-};
+}
 
 export default Navbar;

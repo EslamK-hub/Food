@@ -1,10 +1,15 @@
 import MainHeading from "@/components/main-heading";
 import Menu from "@/components/menu";
+import { getCurrentLocale } from "@/lib/getCurrentLocale";
+import getTrans from "@/lib/translation";
 import { getBestSellingProducts } from "@/server/db/products";
 
 export default async function BestSellers() {
     const bestSellers = await getBestSellingProducts(3);
-        
+    const locale = await getCurrentLocale();
+    const { home } = await getTrans(locale);
+    const { bestSeller } = home;
+
     //     [
     //     {
     //         id: 1,
@@ -33,8 +38,8 @@ export default async function BestSellers() {
             <div className="container">
                 <div className="text-center mb-4">
                     <MainHeading
-                        title={`Our Best Sellers`}
-                        subTitle={`Checkout`}
+                        subTitle={bestSeller.checkOut}
+                        title={bestSeller.OurBestSellers}
                     ></MainHeading>
                 </div>
                 <Menu items={bestSellers}></Menu>

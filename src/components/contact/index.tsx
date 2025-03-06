@@ -1,13 +1,18 @@
 import MainHeading from "@/components/main-heading";
 import { Routes } from "@/constants/enums";
+import { getCurrentLocale } from "@/lib/getCurrentLocale";
+import getTrans from "@/lib/translation";
 
-export default function Contact() {
+export default async function Contact() {
+    const locale = await getCurrentLocale();
+    const { home } = await getTrans(locale);
+    const { contact } = home;
     return (
         <section className="section-gap" id={Routes.CONTACT}>
             <div className="container text-center">
                 <MainHeading
-                    subTitle={"Don't Hesitate"}
-                    title={"Contact Us"}
+                    subTitle={contact["Don'tHesitate"]}
+                    title={contact.contactUs}
                 />
                 <div className="mt-8">
                     <a
