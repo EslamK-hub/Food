@@ -2,6 +2,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Pages, Routes } from "@/constants/enums";
 import { getCurrentLocale } from "@/lib/getCurrentLocale";
 import Link from "next/link";
+import Form from "./_components/Form";
 
 export default async function SigninPage() {
     const locale = await getCurrentLocale();
@@ -13,7 +14,7 @@ export default async function SigninPage() {
                         <h2 className="text-2xl font-semibold text-center text-black mb-4">
                             Welcome Back
                         </h2>
-                        <form />
+                        <Form />
                         <p className="mt-2 flex items-center justify-center text-accent text-sm">
                             <span>Don&apos;t have an account?</span>
                             <Link
