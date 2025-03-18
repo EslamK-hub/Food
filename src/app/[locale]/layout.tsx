@@ -6,6 +6,7 @@ import { Directions, Languages } from "@/constants/enums";
 import { Locale } from "@/i18n.config";
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
+import { Toaster } from "@/components/ui/sonner"
 
 export async function generateStaticParams() {
     return [{ locale: Languages.ARABIC }, { locale: Languages.ENGLISH }];
@@ -40,6 +41,7 @@ export default async function RootLayout({
                     <Header></Header>
                     {children}
                     <Footer></Footer>
+                    <Toaster></Toaster>
                 </ReduxProvider>
             </body>
         </html>
