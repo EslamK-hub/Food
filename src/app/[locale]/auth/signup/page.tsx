@@ -1,6 +1,7 @@
 import { buttonVariants } from "@/components/ui/button";
 import { Pages, Routes } from "@/constants/enums";
 import { Locale } from "@/i18n.config";
+import getTrans from "@/lib/translation";
 import Link from "next/link";
 
 export default async function SignupPage({
@@ -9,17 +10,20 @@ export default async function SignupPage({
     params: Promise<{ locale: Locale }>;
 }) {
     const { locale } = await params;
+    const translations = await getTrans(locale);
     return (
         <main>
             <div className="py-44 md:py-40 bg-gray-50 element-center">
                 <div className="container element-center">
                     <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
                         <h2 className="text-2xl font-semibold text-center text-black mb-4">
-                            Register
+                            {translations.auth.register.title}
                         </h2>
-                        <form />
+                        <form/>
                         <p className="mt-2 flex items-center justify-center text-accent text-sm">
-                            <span>Already have an account?</span>
+                            <span>
+                                {translations.auth.register.authPrompt.message}
+                            </span>
                             <Link
                                 href={`/${locale}/${Routes.AUTH}/${Pages.LOGIN}`}
                                 className={`${buttonVariants({
@@ -27,7 +31,10 @@ export default async function SignupPage({
                                     size: "sm",
                                 })} !text-black`}
                             >
-                                Login
+                                {
+                                    translations.auth.register.authPrompt
+                                        .loginLinkText
+                                }
                             </Link>
                         </p>
                     </div>

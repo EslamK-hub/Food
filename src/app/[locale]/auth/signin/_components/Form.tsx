@@ -9,8 +9,8 @@ import { useParams, useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { signIn } from "next-auth/react";
 import { Translations } from "@/types/translations";
-import { Loader } from "lucide-react";
 import { toast } from "sonner";
+import Loader from "@/components/ui/loader";
 
 export default function Form({ translations }: { translations: Translations }) {
     const router = useRouter();
@@ -21,7 +21,7 @@ export default function Form({ translations }: { translations: Translations }) {
 
     const { getFormFields } = useFormFields({
         slug: Pages.LOGIN,
-        translations: {},
+        translations,
     });
 
     async function onSubmit(e: React.FormEvent) {
@@ -45,15 +45,13 @@ export default function Form({ translations }: { translations: Translations }) {
                 const responseError = JSON.parse(res?.error).responseError;
                 if (responseError) {
                     toast(responseError, {
-                        description: responseError,
-                        className: "text-destructive",
+                        style: { color: 'red' },
                     });
                 }
             }
             if (res?.ok) {
                 toast(translations.messages.loginSuccessful, {
-                    description: translations.messages.loginSuccessful,
-                    className: "text-green-400",
+                    style: { color: 'green' },
                 });
                 router.replace(`/${locale}/${Routes.PROFILE}`);
             }
