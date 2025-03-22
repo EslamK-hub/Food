@@ -3,6 +3,7 @@ import { Pages, Routes } from "@/constants/enums";
 import { Locale } from "@/i18n.config";
 import getTrans from "@/lib/translation";
 import Link from "next/link";
+import Form from "./_components/Form";
 
 export default async function SignupPage({
     params,
@@ -19,7 +20,7 @@ export default async function SignupPage({
                         <h2 className="text-2xl font-semibold text-center text-black mb-4">
                             {translations.auth.register.title}
                         </h2>
-                        <form/>
+                        <Form translations={translations}></Form>
                         <p className="mt-2 flex items-center justify-center text-accent text-sm">
                             <span>
                                 {translations.auth.register.authPrompt.message}

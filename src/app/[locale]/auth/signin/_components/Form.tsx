@@ -9,7 +9,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { signIn } from "next-auth/react";
 import { Translations } from "@/types/translations";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 import Loader from "@/components/ui/loader";
 
 export default function Form({ translations }: { translations: Translations }) {
@@ -43,15 +43,15 @@ export default function Form({ translations }: { translations: Translations }) {
                 const validationError = JSON.parse(res?.error).validationError;
                 setError(validationError);
                 const responseError = JSON.parse(res?.error).responseError;
-                if (responseError) {
-                    toast(responseError, {
-                        style: { color: 'red' },
-                    });
-                }
+                toast({
+                    title: responseError,
+                    className: "text-destructive",
+                });
             }
             if (res?.ok) {
-                toast(translations.messages.loginSuccessful, {
-                    style: { color: 'green' },
+                toast({
+                    title: translations.messages.loginSuccessful,
+                    className: "text-green-400",
                 });
                 router.replace(`/${locale}/${Routes.PROFILE}`);
             }

@@ -6,7 +6,7 @@ import { Directions, Languages } from "@/constants/enums";
 import { Locale } from "@/i18n.config";
 import type { Metadata } from "next";
 import { Cairo, Roboto } from "next/font/google";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toaster";
 
 export async function generateStaticParams() {
     return [{ locale: Languages.ARABIC }, { locale: Languages.ENGLISH }];
