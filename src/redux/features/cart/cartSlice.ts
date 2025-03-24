@@ -9,7 +9,7 @@ export type CartItem = {
     quantity?: number;
     image: string;
     size?: Size;
-    extras: Extra[];
+    extras?: Extra[];
 };
 
 type CartState = {
