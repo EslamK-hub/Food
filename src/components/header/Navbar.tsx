@@ -2,39 +2,44 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Pages, Routes } from "@/constants/enums";
-import { Button, buttonVariants } from "../ui/button";
+import { Routes } from "@/constants/enums";
+import { Button } from "../ui/button";
 import { Menu, XIcon } from "lucide-react";
 import { useParams, usePathname } from "next/navigation";
+import AuthButtons from "./AuthButtons";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { Translations } from "@/types/translations";
+import { Session } from "next-auth";
 
-function Navbar({ translations }: { translations: { [key: string]: string } }) {
+function Navbar({
+    translations,
+    initialSession,
+}: {
+    translations: Translations;
+    initialSession: Session | null;
+}) {
     const [openMenu, setOpenMenu] = useState(false);
-    const {locale} = useParams();
+    const { locale } = useParams();
     const pathname = usePathname();
     const links = [
         {
             id: crypto.randomUUID(),
-            title: translations.menu,
+            title: translations.navbar.menu,
             href: Routes.MENU,
         },
         {
             id: crypto.randomUUID(),
-            title: translations.about,
+            title: translations.navbar.about,
             href: Routes.ABOUT,
         },
         {
             id: crypto.randomUUID(),
-            title: translations.contact,
+            title: translations.navbar.contact,
             href: Routes.CONTACT,
-        },
-        {
-            id: crypto.randomUUID(),
-            title: translations.login,
-            href: `${Routes.AUTH}/${Pages.LOGIN}`,
         },
     ];
     return (
-        <nav className="flex flex-1 justify-end">
+        <nav className="order-last lg:order-none">
             <Button
                 variant="secondary"
                 size="sm"
@@ -59,14 +64,9 @@ function Navbar({ translations }: { translations: { [key: string]: string } }) {
                 {links.map((link) => (
                     <li key={link.id}>
                         <Link
+                            onClick={() => setOpenMenu(false)}
                             href={`/${locale}/${link.href}`}
-                            className={`${
-                                link.href === `${Routes.AUTH}/${Pages.LOGIN}`
-                                    ? `${buttonVariants({
-                                          size: "lg",
-                                      })} !px-8 !rounded-full`
-                                    : "hover:text-primary duration-200 transition-colors"
-                            } font-semibold ${
+                            className={` hover:text-primary duration-200 transition-colors font-semibold ${
                                 pathname.startsWith(`/${locale}/${link.href}`)
                                     ? "text-primary"
                                     : "text-accent"
@@ -76,6 +76,15 @@ function Navbar({ translations }: { translations: { [key: string]: string } }) {
                         </Link>
                     </li>
                 ))}
+                <li className="lg:hidden flex flex-col gap-4">
+                    <div onClick={() => setOpenMenu(false)}>
+                        <AuthButtons
+                            translations={translations}
+                            initialSession={initialSession}
+                        ></AuthButtons>
+                    </div>
+                    <LanguageSwitcher></LanguageSwitcher>
+                </li>
             </ul>
         </nav>
     );
