@@ -6,6 +6,7 @@ import { i18n, LanguageType, Locale } from "./i18n.config";
 import { withAuth } from "next-auth/middleware";
 import { getToken } from "next-auth/jwt";
 import { Pages, Routes } from "./constants/enums";
+import { UserRole } from "@prisma/client";
 
 function getLocale(request: NextRequest): string | undefined {
     const negotiatorHeaders: Record<string, string> = {};
@@ -74,9 +75,29 @@ export default withAuth(
         // If the user is authenticated and is trying to access the auth page,
         // redirect them to the profile page.
         if (isAuthPage && isAuth) {
+            const role = isAuth.role;
+            if (role === UserRole.ADMIN) {
+                return NextResponse.redirect(
+                    new URL(`/${currentLocale}/${Routes.ADMIN}`, request.url)
+                );
+            }
             return NextResponse.redirect(
                 new URL(`/${currentLocale}/${Routes.PROFILE}`, request.url)
             );
+        }
+
+        // If the user is authenticated and is trying to access the admin route,
+        // check their role. If they are not an admin, redirect them to the profile page.
+        if (
+            isAuth &&
+            pathname.startsWith(`/${currentLocale}/${Routes.ADMIN}`)
+        ) {
+            const role = isAuth.role;
+            if (role !== UserRole.ADMIN) {
+                return NextResponse.redirect(
+                    new URL(`/${currentLocale}/${Routes.PROFILE}`, request.url)
+                );
+            }
         }
 
         return response;

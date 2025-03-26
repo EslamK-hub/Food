@@ -24,6 +24,7 @@ model User {
   postalCode    String?
   city          String?
   country       String?
+  role          UserRole       @default(USER)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   orders        OrderProduct[]
@@ -135,6 +136,11 @@ model OrderProduct {
   userId    String?
   product   Product @relation(fields: [productId], references: [id])
   productId String
+}
+
+enum UserRole {
+  USER
+  ADMIN
 }
 
 enum ProductSizes {

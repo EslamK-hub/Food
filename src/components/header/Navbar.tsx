@@ -10,6 +10,8 @@ import AuthButtons from "./AuthButtons";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { Translations } from "@/types/translations";
 import { Session } from "next-auth";
+import { useClientSession } from "@/hooks/useClientSession";
+import { UserRole } from "@prisma/client";
 
 function Navbar({
     translations,
@@ -18,6 +20,7 @@ function Navbar({
     translations: Translations;
     initialSession: Session | null;
 }) {
+    const session = useClientSession(initialSession);
     const [openMenu, setOpenMenu] = useState(false);
     const { locale } = useParams();
     const pathname = usePathname();
@@ -38,6 +41,8 @@ function Navbar({
             href: Routes.CONTACT,
         },
     ];
+
+    const isAdmin = session.data?.user.role === UserRole.ADMIN;
     return (
         <nav className="order-last lg:order-none">
             <Button
@@ -76,6 +81,32 @@ function Navbar({
                         </Link>
                     </li>
                 ))}
+                {session.data?.user && (
+                    <li>
+                        <Link
+                            href={
+                                isAdmin
+                                    ? `/${locale}/${Routes.ADMIN}`
+                                    : `/${locale}/${Routes.PROFILE}`
+                            }
+                            onClick={() => setOpenMenu(false)}
+                            className={`${
+                                pathname.startsWith(
+                                    isAdmin
+                                        ? `/${locale}/${Routes.ADMIN}`
+                                        : `/${locale}/${Routes.PROFILE}`
+                                )
+                                    ? "text-primary"
+                                    : "text-accent"
+                            } hover:text-primary duration-200 transition-colors font-semibold`}
+                        >
+                            {isAdmin
+                                ? translations.navbar.admin
+                                : translations.navbar.profile}
+                        </Link>
+                    </li>
+                )}
+
                 <li className="lg:hidden flex flex-col gap-4">
                     <div onClick={() => setOpenMenu(false)}>
                         <AuthButtons
