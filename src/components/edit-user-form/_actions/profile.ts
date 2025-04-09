@@ -5,6 +5,7 @@ import { getCurrentLocale } from "@/lib/getCurrentLocale";
 import { db } from "@/lib/prisma";
 import getTrans from "@/lib/translation";
 import { updateProfileSchema } from "@/validations/profile";
+import { UserRole } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export default async function updateProfile(
@@ -54,6 +55,7 @@ export default async function updateProfile(
             data: {
                 ...data,
                 image: imageUrl ?? user.image,
+                role: isAdmin ? UserRole.ADMIN : UserRole.USER,
             },
         });
         revalidatePath(`/${locale}/${Routes.PROFILE}`);
