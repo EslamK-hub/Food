@@ -1,0 +1,35 @@
+import { Locale } from "@/i18n.config";
+import getTrans from "@/lib/translation";
+import { getCategories } from "@/server/db/categories";
+import Form from "./_components/Form";
+import CategoryItem from "./_components/CategoryItem";
+
+export default async function CategoriesPage({
+    params,
+}: {
+    params: Promise<{ locale: Locale }>;
+    }) {
+    const { locale } = await params;
+    const translations = await getTrans(locale);
+    const categories = await getCategories();
+    return (
+        <main>
+            <section className="section-gap">
+                <div className="container">
+                    <div className="sm:max-w-[625px] mx-auto space-y-6">
+                        <Form translations={translations}></Form>
+                        {categories.length > 0 ? (
+                            <ul>{categories.map(category => (
+                                <CategoryItem key={category.id} category={category}></CategoryItem>
+                            )) }</ul>
+                        ) : (
+                            <p className="text-accent text-center py-10">
+                                {translations.noCategoriesFound}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </section>
+        </main>
+    );
+}

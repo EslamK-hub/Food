@@ -106,7 +106,7 @@ model Extra {
 model Category {
   id       String    @id @default(uuid())
   name     String
-  order    Int
+  order    Int       @default(autoincrement())
   products Product[]
 }
 
