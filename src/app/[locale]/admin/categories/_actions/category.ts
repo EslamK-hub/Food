@@ -4,7 +4,7 @@ import { Pages, Routes } from "@/constants/enums";
 import { getCurrentLocale } from "@/lib/getCurrentLocale";
 import { db } from "@/lib/prisma";
 import getTrans from "@/lib/translation";
-import { addCategorySchema } from "@/validations/category";
+import { addCategorySchema, updateCategorySchema } from "@/validations/category";
 import { revalidatePath } from "next/cache";
 
 export const addCategory = async (prevState: unknown, formData: FormData) => {
@@ -31,6 +31,49 @@ export const addCategory = async (prevState: unknown, formData: FormData) => {
         return {
             status: 201,
             message: translations.messages.categoryAdded,
+        };
+    } catch (error) {
+        console.error(error);
+        return {
+            status: 500,
+            message: translations.messages.unexpectedError,
+        };
+    }
+};
+
+export const updateCategory = async (
+    id: string,
+    prevState: unknown,
+    formData: FormData
+) => {
+    const locale = await getCurrentLocale();
+    const translations = await getTrans(locale);
+    const result = updateCategorySchema(translations).safeParse(
+        Object.fromEntries(formData.entries())
+    );
+    if (result.success === false) {
+        return {
+            error: result.error.formErrors.fieldErrors,
+            status: 400,
+        };
+    }
+    const data = result.data;
+
+    try {
+        await db.category.update({
+            where: {
+                id,
+            },
+            data: {
+                name: data.categoryName,
+            },
+        });
+        revalidatePath(`/${locale}/${Routes.ADMIN}/${Pages.CATEGORIES}`);
+        revalidatePath(`/${locale}/${Routes.MENU}`);
+
+        return {
+            status: 200,
+            message: translations.messages.updateCategorySuccess,
         };
     } catch (error) {
         console.error(error);
