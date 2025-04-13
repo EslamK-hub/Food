@@ -2,6 +2,7 @@ import { Category } from "@prisma/client";
 import EditCategory from "./EditCategory";
 import getTrans from "@/lib/translation";
 import { getCurrentLocale } from "@/lib/getCurrentLocale";
+import DeleteCategory from "./DeleteCategory";
 
 async function CategoryItem({ category }: { category: Category }) {
     const locale = await getCurrentLocale();
@@ -11,9 +12,9 @@ async function CategoryItem({ category }: { category: Category }) {
             <h3 className="text-black font-medium text-lg flex-1">
                 {category.name}
             </h3>
-            <div>
+            <div className="flex items-center gap-2">
                 <EditCategory translations={translations} category={category}></EditCategory>
-                {/* <DeleteCategory></DeleteCategory> */}
+                <DeleteCategory id={category.id}></DeleteCategory>
             </div>
         </li>
     );

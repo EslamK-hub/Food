@@ -4,7 +4,10 @@ import { Pages, Routes } from "@/constants/enums";
 import { getCurrentLocale } from "@/lib/getCurrentLocale";
 import { db } from "@/lib/prisma";
 import getTrans from "@/lib/translation";
-import { addCategorySchema, updateCategorySchema } from "@/validations/category";
+import {
+    addCategorySchema,
+    updateCategorySchema,
+} from "@/validations/category";
 import { revalidatePath } from "next/cache";
 
 export const addCategory = async (prevState: unknown, formData: FormData) => {
@@ -74,6 +77,31 @@ export const updateCategory = async (
         return {
             status: 200,
             message: translations.messages.updateCategorySuccess,
+        };
+    } catch (error) {
+        console.error(error);
+        return {
+            status: 500,
+            message: translations.messages.unexpectedError,
+        };
+    }
+};
+
+export const deleteCategory = async (id: string) => {
+    const locale = await getCurrentLocale();
+    const translations = await getTrans(locale);
+
+    try {
+        await db.category.delete({
+            where: {
+                id,
+            },
+        });
+        revalidatePath(`/${locale}/${Routes.ADMIN}/${Pages.CATEGORIES}`);
+        revalidatePath(`/${locale}/${Routes.MENU}`);
+        return {
+            status: 200,
+            message: translations.messages.deleteCategorySuccess,
         };
     } catch (error) {
         console.error(error);

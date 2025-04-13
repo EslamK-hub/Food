@@ -55,7 +55,7 @@ export default function AdminTabs({
                     <li key={tab.id}>
                         <Link
                             href={`/${locale}/${tab.href}`}
-                            className={`${
+                            className={` hover:!text-white ${
                                 isActiveTab(tab.href)
                                     ? buttonVariants({ variant: "default" })
                                     : buttonVariants({ variant: "outline" })
