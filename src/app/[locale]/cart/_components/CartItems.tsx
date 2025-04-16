@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { deliveryFee, getSubTotal } from "@/lib/cart";
 import { formatCurrency } from "@/lib/formatters";
 import {
+    loadCartFromStorage,
     removeItemFromCart,
     selectCartItems,
 } from "@/redux/features/cart/cartSlice";
@@ -18,8 +19,11 @@ export default function CartItems() {
     const subTotal = getSubTotal(cart)
 
     useEffect(() => {
-        localStorage.setItem("cartItems", JSON.stringify(cart))
-    }, [cart])
+        const storedItems = localStorage.getItem("cartItems");
+        if (storedItems) {
+            dispatch(loadCartFromStorage(JSON.parse(storedItems)));
+        }
+    }, [dispatch]);
     return (
         <div>
             {cart && cart.length > 0 ? (

@@ -8,7 +8,6 @@ import Image from "next/image";
 import FormFields from "../form-fields/form-fields";
 import { IFormField } from "@/types/app";
 import { Button } from "../ui/button";
-import { useSession } from "next-auth/react";
 import { UserRole } from "@prisma/client";
 import Checkbox from "../form-fields/checkbox";
 import { ValidationErrors } from "@/validations/auth";
@@ -27,7 +26,6 @@ export default function EditUserForm({
 }) {
     const [selectedImage, setSelectedImage] = useState(user.image ?? "");
     const [isAdmin, setIsAdmin] = useState(user.role === UserRole.ADMIN);
-    const session = useSession();
     const { getFormFields } = useFormFields({
         slug: Routes.PROFILE,
         translations,
