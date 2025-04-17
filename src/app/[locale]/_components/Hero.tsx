@@ -50,7 +50,7 @@ export default async function Hero() {
                 </div>
                 <div className="relative hidden md:block">
                     <Image
-                        src="/assets/images/pizza.png"
+                        src="https://res.cloudinary.com/dstelmwba/image/upload/v1744889780/pizza_n3ahrq.png"
                         alt="Pizza"
                         fill
                         className="object-contain"
