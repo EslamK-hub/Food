@@ -1,22 +1,22 @@
+import Link from "@/components/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Languages, Pages, Routes } from "@/constants/enums";
 import { Locale } from "@/i18n.config";
 import getTrans from "@/lib/translation";
 import { authOptions } from "@/server/auth";
+import { getProducts } from "@/server/db/products";
+import { UserRole } from "@prisma/client";
 import { ArrowRightCircle } from "lucide-react";
 import { getServerSession } from "next-auth";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import MenuItems from "./_components/MenuItems";
-import { UserRole } from "@prisma/client";
-import { getProducts } from "@/server/db/products";
 
-export default async function MenuItemsPage({
+async function MenuItemsPage({
     params,
 }: {
     params: Promise<{ locale: Locale }>;
 }) {
-    const { locale } = await params;
+    const locale = (await params).locale;
     const translations = await getTrans(locale);
     const session = await getServerSession(authOptions);
     const products = await getProducts();
@@ -52,3 +52,5 @@ export default async function MenuItemsPage({
         </main>
     );
 }
+
+export default MenuItemsPage;
