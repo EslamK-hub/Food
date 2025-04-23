@@ -9,6 +9,15 @@ type FormDataFile = Blob & {
 
 export async function POST(request: Request) {
     try {
+        // Add headers to handle multipart/form-data
+        const contentType = request.headers.get("content-type");
+        if (!contentType || !contentType.includes("multipart/form-data")) {
+            return NextResponse.json(
+                { error: "Content type must be multipart/form-data" },
+                { status: 400 }
+            );
+        }
+
         const formData = await request.formData();
         const file = formData.get("file") as FormDataFile | null;
         const pathName = formData.get("pathName") as string;

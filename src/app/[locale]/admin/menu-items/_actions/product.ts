@@ -179,6 +179,9 @@ const getImageUrl = async (imageFile: File) => {
             {
                 method: "POST",
                 body: formData,
+                headers: {
+                    Accept: "application/json",
+                },
             }
         );
         console.log(response);
